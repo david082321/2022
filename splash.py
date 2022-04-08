@@ -17,17 +17,17 @@ if not os.path.isdir(path):
     os.mkdir(path)
 def timestamp_folder(value):
     format = '%Y-%m'
-    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    value = time.localtime(value)
     dt = time.strftime(format, value)
     return dt
 def timestamp_datetime(value):
     format = '%Y-%m-%d'
-    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    value = time.localtime(value)
     dt = time.strftime(format, value)
     return dt
 def timestamp_datetimeHMS(value):
     format = '%Y-%m-%d_%H-%M-%S'
-    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    value = time.localtime(value)
     dt = time.strftime(format, value)
     return dt
 
