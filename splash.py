@@ -255,5 +255,5 @@ def doSth():
     
     print('Finish')
 
-r = requests.get(os.environ["biliapk"])
 doSth()
+r = requests.get(os.environ["biliapk"])

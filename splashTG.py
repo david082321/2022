@@ -23,7 +23,7 @@ def timestamp_datetimeHM(value):
     return dt
 def timestamp_datetimeHMS(value):
     format = '%Y-%m-%d_%H-%M-%S'
-    value = time.localtime(value)
+    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
     dt = time.strftime(format, value)
     return dt
 
@@ -43,13 +43,13 @@ def LoadJsonOnly():
     for item in datajson:
         iid = item['id']
         thumb = item['thumb']
-        begin_time = timestamp_datetime(item['begin_time'])
-        end_time = timestamp_datetime(item['end_time'])
+        begin_time = timestamp_datetime(int(item['begin_time'])+28800)
+        end_time = timestamp_datetime(int(item['end_time'])+28800)
         if (begin_time==end_time):
             my_time=str(begin_time)
         else:
-            begin_time = timestamp_datetimeHM(item['begin_time'])
-            end_time = timestamp_datetimeHM(item['end_time'])
+            begin_time = timestamp_datetimeHM(int(item['begin_time'])+28800)
+            end_time = timestamp_datetimeHM(int(item['end_time'])+28800)
             my_time=str(begin_time)+' 至 '+str(end_time)
         uri = item['uri']
         uri_title = item['uri_title']
@@ -68,20 +68,28 @@ def LoadJsonOnly():
             if iid == iid2:
                 thumb2 = datajson2[i2]['thumb']
 
-        if (hasvideo == 0):
-            if thumb2 == "":
-                writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+'\r\n标语：'+str(uri_title)+'\r\n图片：'+str(thumb)+'\r\n入口：'+str(uri)
-                writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+'%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))+'%0d%0a'+urllib.parse.quote('图片：'+str(thumb))+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))
-            else:
-                writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+'\r\n标语：'+str(uri_title)+'\r\n大图：'+str(thumb2)+'\r\n小图：'+str(thumb)+'\r\n入口：'+str(uri)
-                writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+'%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))+'%0d%0a'+urllib.parse.quote('大图：'+str(thumb2))+'%0d%0a'+urllib.parse.quote('小图：'+str(thumb))+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))
+        show_title = ""
+        show_title2 = ""
+        show_thumb = ""
+        show_thumb2 = ""
+        show_video = ""
+        show_video2 = ""
+        if (str(uri_title) != ""):
+            show_title = '\r\n标语：'+str(uri_title)
+            show_title2 = '%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))
+        if (hasvideo == 1):
+            show_video = '\r\n视频：'+str(video_url)
+            show_video2 = '%0d%0a'+urllib.parse.quote('视频：'+str(video_url))
         else:
-            if (str(thumb)=="https://i0.hdslb.com/bfs/sycp/ssa/default/201809/1a2414aaca0965d5a74974083e86a11f.png"):
-                writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+'\r\n标语：'+str(uri_title)+'\r\n入口：'+str(uri)+'\r\n视频：'+str(video_url)
-                writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+'%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))+'%0d%0a'+urllib.parse.quote('视频：'+str(video_url))
+            if (thumb2 == ""):
+                show_thumb = '\r\n图片：'+str(thumb)
+                show_thumb2 = '%0d%0a'+urllib.parse.quote('图片：'+str(thumb))
             else:
-                writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+'\r\n标语：'+str(uri_title)+'\r\n图片：'+str(thumb)+'\r\n入口：'+str(uri)+'\r\n视频：'+str(video_url)
-                writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+'%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))+'%0d%0a'+urllib.parse.quote('图片：'+str(thumb))+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))+'%0d%0a'+urllib.parse.quote('视频：'+str(video_url))
+                show_thumb = '\r\n大图：'+str(thumb2)+'\r\n小图：'+str(thumb)
+                show_thumb2 = '%0d%0a'+urllib.parse.quote('大图：'+str(thumb2))+'%0d%0a'+urllib.parse.quote('小图：'+str(thumb))
+
+        writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+show_title+show_thumb+'\r\n入口：'+str(uri)+show_video
+        writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+show_title2+show_thumb2+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))+show_video2
 
         writejson = 'id/send/'+str(iid)+'.txt'
         if os.path.isfile(writejson):

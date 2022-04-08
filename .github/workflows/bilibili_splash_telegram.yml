@@ -6,7 +6,7 @@ name: splashTG
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/10 * * * *'
     # cron表达式，Actions时区是UTC时间
     # 分 時 天 月 每週
 
