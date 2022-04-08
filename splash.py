@@ -37,7 +37,7 @@ def LoadJsonOnly(raltion,mobi_app,width,height,listName,listName2):
         platform = "android"
     else:
         platform = "ios"
-    birth = str(datetime.datetime.now(tz=timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
+    birth = str(datetime.datetime.now(tz=datetime.timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
     url = 'http://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=999999999&mobi_app=' + str(mobi_app) + '&platform='+str(platform) + '&width='+str(width)+'&height='+str(height) + "&birth=" + str(birth)
     print(str(fileName))
     r = requests.get(url)
@@ -75,7 +75,7 @@ def LoadImg(raltion,mobi_app,width,height,listName,listName2):
     path = 'splash/'+str(raltion)
     if not os.path.isdir(path):
         os.mkdir(path)
-    birth = str(datetime.datetime.now(tz=timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
+    birth = str(datetime.datetime.now(tz=datetime.timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
     #url = 'http://app.bilibili.com/x/v2/splash/list?build='+ str(LoadVer()) +'&mobi_app=' + str(mobi_app) + '&width='+str(width)+'&height='+str(height)
     url = 'http://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=999999999&mobi_app=' + str(mobi_app) + '&width='+str(width)+'&height='+str(height) + "&birth=" + str(birth)
     print(str(raltion))
@@ -193,7 +193,7 @@ def LoadImgbrand(raltion,listName3):
     time.sleep(1)
 
 def LoadJson(raltion,mobi_app,width,height,jsonName):
-    birth = str(datetime.datetime.now(tz=timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
+    birth = str(datetime.datetime.now(tz=datetime.timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
     url = 'http://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=999999999&mobi_app=' + str(mobi_app) + '&width='+str(width)+'&height='+str(height) + "&birth=" + str(birth)
     r = requests.get(url)
     f = open(jsonName,'wt')
