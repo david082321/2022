@@ -13,12 +13,12 @@ f.close()
 
 def timestamp_datetime(value):
     format = '%Y-%m-%d'
-    value = time.localtime(value)
+    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
     dt = time.strftime(format, value)
     return dt
 def timestamp_datetimeHM(value):
     format = '%Y-%m-%d %H:%M'
-    value = time.localtime(value)
+    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
     dt = time.strftime(format, value)
     return dt
 def timestamp_datetimeHMS(value):
@@ -28,7 +28,7 @@ def timestamp_datetimeHMS(value):
     return dt
 
 def LoadJsonOnly():
-    birth = str(datetime.datetime.now().strftime('%m%d')) #"0101"
+    birth = str(datetime.datetime.now(tz=timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
     url = "http://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=996000200&mobi_app=android&width=1080&height=1920&birth=" + str(birth)
     r = requests.get(url)
     if (r.status_code!=200):

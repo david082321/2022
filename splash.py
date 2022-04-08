@@ -17,17 +17,17 @@ if not os.path.isdir(path):
     os.mkdir(path)
 def timestamp_folder(value):
     format = '%Y-%m'
-    value = time.localtime(value)
+    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
     dt = time.strftime(format, value)
     return dt
 def timestamp_datetime(value):
     format = '%Y-%m-%d'
-    value = time.localtime(value)
+    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
     dt = time.strftime(format, value)
     return dt
 def timestamp_datetimeHMS(value):
     format = '%Y-%m-%d_%H-%M-%S'
-    value = time.localtime(value)
+    value = time.localtime(value).replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8)))
     dt = time.strftime(format, value)
     return dt
 
@@ -37,7 +37,7 @@ def LoadJsonOnly(raltion,mobi_app,width,height,listName,listName2):
         platform = "android"
     else:
         platform = "ios"
-    birth = str(datetime.datetime.now().strftime('%m%d')) #"0101"
+    birth = str(datetime.datetime.now(tz=timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
     url = 'http://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=999999999&mobi_app=' + str(mobi_app) + '&platform='+str(platform) + '&width='+str(width)+'&height='+str(height) + "&birth=" + str(birth)
     print(str(fileName))
     r = requests.get(url)
@@ -49,8 +49,8 @@ def LoadJsonOnly(raltion,mobi_app,width,height,listName,listName2):
     for i in range(0,max):
         iid = datajson[i]['id']
         thumb = datajson[i]['thumb']
-        begin_time = timestamp_datetime(datajson[i]['begin_time'])
-        end_time = timestamp_datetime(datajson[i]['end_time'])
+        begin_time = timestamp_datetime(datajson[i]['begin_time']+28800)
+        end_time = timestamp_datetime(datajson[i]['end_time']+28800)
         uri = datajson[i]['uri']
         img_format = thumb.split('.')[-1]
         try:
@@ -75,7 +75,7 @@ def LoadImg(raltion,mobi_app,width,height,listName,listName2):
     path = 'splash/'+str(raltion)
     if not os.path.isdir(path):
         os.mkdir(path)
-    birth = str(datetime.datetime.now().strftime('%m%d')) #"0101"
+    birth = str(datetime.datetime.now(tz=timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
     #url = 'http://app.bilibili.com/x/v2/splash/list?build='+ str(LoadVer()) +'&mobi_app=' + str(mobi_app) + '&width='+str(width)+'&height='+str(height)
     url = 'http://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=999999999&mobi_app=' + str(mobi_app) + '&width='+str(width)+'&height='+str(height) + "&birth=" + str(birth)
     print(str(raltion))
@@ -87,11 +87,11 @@ def LoadImg(raltion,mobi_app,width,height,listName,listName2):
     for item in datajson:
         iid = item['id']
         thumb = item['thumb']
-        begin_time = timestamp_datetime(item['begin_time'])
-        end_time = timestamp_datetime(item['end_time'])        
+        begin_time = timestamp_datetime(item['begin_time']+28800)
+        end_time = timestamp_datetime(item['end_time']+28800)        
         uri = item['uri']
         
-        folder = timestamp_folder(item['begin_time'])
+        folder = timestamp_folder(item['begin_time']+28800)
         pathWithMonth = path + '/' + folder
         if not os.path.isdir(pathWithMonth):
             os.mkdir(pathWithMonth)
@@ -193,7 +193,7 @@ def LoadImgbrand(raltion,listName3):
     time.sleep(1)
 
 def LoadJson(raltion,mobi_app,width,height,jsonName):
-    birth = str(datetime.datetime.now().strftime('%m%d')) #"0101"
+    birth = str(datetime.datetime.now(tz=timezone(timedelta(hours=8))).strftime('%m%d')) #"0101"
     url = 'http://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=999999999&mobi_app=' + str(mobi_app) + '&width='+str(width)+'&height='+str(height) + "&birth=" + str(birth)
     r = requests.get(url)
     f = open(jsonName,'wt')
