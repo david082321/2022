@@ -1,0 +1,113 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: splashTG
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+    # cron表达式，Actions时区是UTC时间
+    # 分 時 天 月 每週
+
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 設定 Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: 安裝依賴
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: 執行 Python 腳本
+        env:
+            token: ${{ secrets.token }}
+            biliapk: ${{ secrets.biliapk }}
+        run: |
+          python splashTG.py
+      - name: commit
+        run: |
+          git config --global user.email non-reply@github.com
+          git config --global user.name action
+          git add .
+          git commit -m "Auto Update" -a
+        
+      - name: 推送
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GHTO }}
+          
+      - name: Read splashTG_report.txt
+        id: package
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./splashTG_report.txt
+
+      - name: Send mail
+        if: ${{ !startsWith(steps.package.outputs.content, '123') }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # 需要的邮件服务器地址。
+          server_address: smtp.gmail.com
+          # 需要的邮件服务器端口。
+          server_port: 465
+          # 可选（推荐）：邮件服务器用户名。
+          username: ${{secrets.MAIL_USERNAME}}
+          # 可选（推荐）的邮件服务器密码。
+          password: ${{secrets.MAIL_PASSWORD}}
+          # 必要的邮件主题。
+          subject: "[通知] 有新的封面图"
+          # 必要的收件人地址。
+          to: ${{secrets.MAIL_TO1}}
+          # 需要的发件人全名（地址可以跳过）。
+          from: ${{secrets.MAIL_FROM}} # <user@example.com>
+          # 可选择此连接是否使用TLS（如果server_port是465，默认为true）。
+          secure: true
+          # 可选的纯文本内容。
+          # body: Build job of ${{github.repository}} completed successfully!
+          body: ${{ steps.package.outputs.content }}
+          # 可选的HTML正文从文件中读取。
+          #html_body: file://tg_report.txt
+          # Optional unsigned/invalid certificates allowance:
+          ignore_cert: true
+          # Optional attachments:
+          # attachments: attachments.zip,git.diff,./dist/static/*.js
+          # Optional priority: 'high', 'normal' (default) or 'low'
+          priority: high
+
+      - name: Send mail2
+        if: ${{ !startsWith(steps.package.outputs.content, '123') }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # 需要的邮件服务器地址。
+          server_address: smtp.gmail.com
+          # 需要的邮件服务器端口。
+          server_port: 465
+          # 可选（推荐）：邮件服务器用户名。
+          username: ${{secrets.MAIL_USERNAME}}
+          # 可选（推荐）的邮件服务器密码。
+          password: ${{secrets.MAIL_PASSWORD}}
+          # 必要的邮件主题。
+          subject: "[通知] 有新的封面图"
+          # 必要的收件人地址。
+          to: ${{secrets.MAIL_TO2}}
+          # 需要的发件人全名（地址可以跳过）。
+          from: ${{secrets.MAIL_FROM}} # <user@example.com>
+          # 可选择此连接是否使用TLS（如果server_port是465，默认为true）。
+          secure: true
+          # 可选的纯文本内容。
+          # body: Build job of ${{github.repository}} completed successfully!
+          body: ${{ steps.package.outputs.content }}
+          # 可选的HTML正文从文件中读取。
+          #html_body: file://tg_report.txt
+          # Optional unsigned/invalid certificates allowance:
+          ignore_cert: true
+          # Optional attachments:
+          # attachments: attachments.zip,git.diff,./dist/static/*.js
+          # Optional priority: 'high', 'normal' (default) or 'low'
+          priority: high

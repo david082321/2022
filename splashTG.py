@@ -1,0 +1,127 @@
+# -*- coding: utf-8 -*-
+import requests
+import json
+import os
+import time
+import math
+import urllib
+import datetime
+
+f = open('splashTG_report.txt','w')
+f.write("123")
+f.close()
+
+def timestamp_datetime(value):
+    format = '%Y-%m-%d'
+    value = time.localtime(value)
+    dt = time.strftime(format, value)
+    return dt
+def timestamp_datetimeHM(value):
+    format = '%Y-%m-%d %H:%M'
+    value = time.localtime(value)
+    dt = time.strftime(format, value)
+    return dt
+def timestamp_datetimeHMS(value):
+    format = '%Y-%m-%d_%H-%M-%S'
+    value = time.localtime(value)
+    dt = time.strftime(format, value)
+    return dt
+
+def LoadJsonOnly():
+    birth = str(datetime.datetime.now().strftime('%m%d')) #"0101"
+    url = "http://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=996000200&mobi_app=android&width=1080&height=1920&birth=" + str(birth)
+    r = requests.get(url)
+    if (r.status_code!=200):
+        print(r.status_code)
+        time.sleep(10)
+    datajson = r.json()['data']['list']
+    url2 = "https://app.bilibili.com/x/v2/splash/list?appkey=1d8b6e7d45233436&build=996000200&mobi_app=ipad&platform=ios&width=0&height=0&birth=" + str(birth)
+    r2 = requests.get(url2)
+    jscontent2 = r2.content.decode("utf-8")
+    datajson2 = json.loads(str(jscontent2))['data']['list']
+    max2 = len(datajson2)
+    for item in datajson:
+        iid = item['id']
+        thumb = item['thumb']
+        begin_time = timestamp_datetime(item['begin_time'])
+        end_time = timestamp_datetime(item['end_time'])
+        if (begin_time==end_time):
+            my_time=str(begin_time)
+        else:
+            begin_time = timestamp_datetimeHM(item['begin_time'])
+            end_time = timestamp_datetimeHM(item['end_time'])
+            my_time=str(begin_time)+' 至 '+str(end_time)
+        uri = item['uri']
+        uri_title = item['uri_title']
+        try:
+            video_url = item['video_url']
+            if video_url is None:
+                hasvideo = 0
+            else:
+                hasvideo = 1
+        except KeyError:
+            hasvideo = 0
+        
+        thumb2 = ""
+        for i2 in range(0,max2):
+            iid2 = datajson2[i2]['id']
+            if iid == iid2:
+                thumb2 = datajson2[i2]['thumb']
+
+        if (hasvideo == 0):
+            if thumb2 == "":
+                writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+'\r\n标语：'+str(uri_title)+'\r\n图片：'+str(thumb)+'\r\n入口：'+str(uri)
+                writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+'%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))+'%0d%0a'+urllib.parse.quote('图片：'+str(thumb))+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))
+            else:
+                writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+'\r\n标语：'+str(uri_title)+'\r\n大图：'+str(thumb2)+'\r\n小图：'+str(thumb)+'\r\n入口：'+str(uri)
+                writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+'%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))+'%0d%0a'+urllib.parse.quote('大图：'+str(thumb2))+'%0d%0a'+urllib.parse.quote('小图：'+str(thumb))+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))
+        else:
+            if (str(thumb)=="https://i0.hdslb.com/bfs/sycp/ssa/default/201809/1a2414aaca0965d5a74974083e86a11f.png"):
+                writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+'\r\n标语：'+str(uri_title)+'\r\n入口：'+str(uri)+'\r\n视频：'+str(video_url)
+                writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+'%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))+'%0d%0a'+urllib.parse.quote('视频：'+str(video_url))
+            else:
+                writetext = 'ID：'+str(iid)+'\r\n日期：'+str(my_time)+'\r\n标语：'+str(uri_title)+'\r\n图片：'+str(thumb)+'\r\n入口：'+str(uri)+'\r\n视频：'+str(video_url)
+                writetext2 = urllib.parse.quote('ID：'+str(iid))+'%0d%0a'+urllib.parse.quote('日期：'+str(my_time))+'%0d%0a'+urllib.parse.quote('标语：'+str(uri_title))+'%0d%0a'+urllib.parse.quote('图片：'+str(thumb))+'%0d%0a'+urllib.parse.quote('入口：'+str(uri))+'%0d%0a'+urllib.parse.quote('视频：'+str(video_url))
+
+        writejson = 'id/send/'+str(iid)+'.txt'
+        if os.path.isfile(writejson):
+            if ( str(open(writejson,'r').read()) !=str(writetext).replace('\r', '') ):
+                writeAndsend=1
+                print("E")
+                #print(open(writejson,'r').read())
+                #print(str(writetext))
+            else:
+                writeAndsend=0
+        else:
+            writeAndsend=1
+        
+        if (writeAndsend==1):
+            if (open('splashTG_report.txt','r').read()=="123"):
+                f = open('splashTG_report.txt','w')
+                f.write("")
+                f.close()
+            f = open('splashTG_report.txt','a')
+            f.write(writetext+'\r\n\r\n')
+            f.close()
+            print("writeAndsend")
+            try:
+                f = open(writejson,'w')
+                f.write(writetext)
+                f.close()
+            except ValueError:
+                print("error")
+                pass
+            bottoken = os.environ["token"]
+            url = 'https://api.telegram.org/bot'+bottoken+'/sendMessage?chat_id=-1001213651238&text='+urllib.parse.quote(writetext)
+            r = requests.get(url)
+            
+            if (hasvideo == 0):
+                docu = thumb
+            else:
+                docu = video_url
+            url2 = 'https://api.telegram.org/bot'+bottoken+'/sendDocument?chat_id=-1001213651238&document='+urllib.parse.quote(docu)
+            r2 = requests.get(url2)
+    time.sleep(1)
+
+LoadJsonOnly()
+print('Finish')

@@ -1,0 +1,43 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: splash
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+    # cron表达式，Actions时区是UTC时间
+    # 分 時 天 月 每週
+
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 設定 Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: 安裝依賴
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: 執行 Python 腳本
+        env:
+            token: ${{ secrets.token }}
+            biliapk: ${{ secrets.biliapk }}
+        run: |
+          python splash.py
+      - name: Commit
+        run: |
+          git config --global user.email non-reply@github.com
+          git config --global user.name action
+          git add .
+          git commit -m "Auto Update" -a
+        
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GHTO }}
