@@ -1,12 +1,1 @@
-ID：6928
-日期：2022-04-16
-大图：https://i0.hdslb.com/bfs/sycp/creative_img/202204/0029ee2df06541ca7d9c2309b07516cd.jpg
-小图：https://i0.hdslb.com/bfs/sycp/creative_img/202204/e4327868d1d3808df3063d2fd8525d66.jpg
-入口：https://www.bilibili.com/blackboard/activity-JrrNqnedJ3.html
-
-ID：6929
-日期：2022-04-16
-大图：https://i0.hdslb.com/bfs/sycp/creative_img/202204/81aabe9eba59177128ba90f620c0ac1a.jpg
-小图：https://i0.hdslb.com/bfs/sycp/creative_img/202204/dfa4834aa2d745c9a5482881ee6d6886.jpg
-入口：https://live.bilibili.com/22532309
-
+123
