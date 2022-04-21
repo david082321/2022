@@ -1,5 +1,1 @@
-ID：6972
-日期：2022-04-22
-入口：https://e.cn.miaozhen.com/r/k=2295643&p=89fZQ&dx=__IPDX__&rt=2&pro=s&ns=__IP__&ni=__IESID__&v=__LOC__&xa=__ADPLATFORM__&tr=__REQUESTID__&mo=__OS__&m0=__OPENUDID__&m0a=__DUID__&m1=__ANDROIDID1__&m1a=__ANDROIDID__&m2=__IMEI__&m4=__AAID__&m5=__IDFA__&m6=__MAC1__&m6a=__MAC__&m11=__OAID__&m14=__CAID__&m5a=__IDFV__&mn=__ANAME__&m5b=__IDFA1__&m11a=__OAID1__&m14a=__CAID1__&o=https://trace.rtbasia.com/tkp?rta_k=2nnDWBSuKX&utm_campaign=_rtc_fdf77ddb0a90a026&utm_source=bilibili&utm_content=BiliBili_OP&utm_medium=national&utm_term=CPT&device=Mobile&adtype=7&crtype=2&playmode=1&idfa=__IDFAMD5__&oaid=__OAIDMD5__&custid1=__REQUESTID__&os=__OS__&ua=__UA__&ts=__TS__&clientip=__IP__&forward=https%3A%2F%2Fwww.tiffany.cn%2Fengagement%2F%3Fomcid%3Ddis-cn_bilibili_op_2022le%26utm_medium%3Ddisplay-cn%26utm_source%3Dbilibili_op%26utm_campaign%3D2022le&sg=086babb8fda6ce2e427060801958a3e3&ord=1650528739466
-视频：http://upos-sz-static.bilivideo.com/ssaxcode/lz/ej/n220418qn46g7wurjtvkt25ndawmejlz-1-SPLASH.mp4
-
+123
