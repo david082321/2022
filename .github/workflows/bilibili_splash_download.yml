@@ -32,8 +32,8 @@ jobs:
           python splash.py
       - name: Commit
         run: |
-          git config --global user.email non-reply@github.com
-          git config --global user.name action
+          git config --global user.email 92088957+david082321-bot@users.noreply.github.com
+          git config --global user.name david082321-bot
           git add .
           git commit -m "Auto Update" -a
         
